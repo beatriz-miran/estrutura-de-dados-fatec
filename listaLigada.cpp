@@ -80,13 +80,24 @@ void inserirFimLista(Lista *lista, char *nome, int idade, float alt){
 //função para exibir todo o conteudo da lista
 void exibirLista(Lista *lista)
 {
+	
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+	WORD saved_attributes;
+	
+	//salvar os atributos de cores: de fundo e de fonte
+	GetConsoleScreenBufferInfo(hConsole,&consoleInfo);
+	saved_attributes = consoleInfo.wAttributes;
+	
 	No *inicio = lista->inicio; //posiciona no primeiro nó da lista
 	printf("\n\nTamanho da lista: %d elementos \n\n", lista->tamanho);
 	
 	while(inicio != NULL)
 	{
 		printf("| Nome: %s | Idade: %d | Altura: %f |", &inicio->nome, inicio->idade, inicio->altura);
+		SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
 		printf(" -> \n\n");
+		SetConsoleTextAttribute(hConsole, saved_attributes);
 		inicio = inicio->proximo;
 	}
 	printf("NULL");
