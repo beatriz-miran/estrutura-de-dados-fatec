@@ -24,6 +24,10 @@ int senhas[7];
 
 main()
 {
+	inicio = 0;
+	fim = 0;
+	
+	
 	tamanho = sizeof(senhas)/sizeof(int);
 	printf("Tamanho do vetor: %d elementos \n", tamanho);
 	//printf("Tamanho do vetor em bytes: %d", sizeof(senhas));
@@ -32,14 +36,31 @@ main()
 
 
 //inserir elementos na lista
-void enqueue(int){
-	
+void enqueue(int elem){
+	if(isFull() == 1){
+		puts("A fila está cheia.");
+	}
+	else{
+		senhas[fim] = elem;
+		fim++;
+		total++;
+	}
 };// fim enqueue
 
 
 //retirar elementos da lista
 int dequeue(){
-	
+	if(isEmpty() == 1){
+		puts("A fila está vazia!");
+	}else{
+		int elemento;
+		elemento = senhas[inicio];
+		inicio++;
+		
+		total--;
+		
+		return elemento;
+		}
 };//fim dequeue
 
 
