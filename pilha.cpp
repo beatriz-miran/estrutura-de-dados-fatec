@@ -101,7 +101,15 @@ int top(){
 }//fim do top
 
 void showLIFO(){
-	
+	puts("\nConteudo da pilha": );
+	if(isEmpty() == 1){
+		puts("pilha vazia");
+	}
+	else{
+		fot(int i = 0; i <= topo; i++){
+			printf("%d\n", pilha[i]);
+		}
+	}
 }//fim do show
 
 
