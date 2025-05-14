@@ -88,3 +88,65 @@ int main(){
 	printf("\nQuantidade de trocas: %d ", troca);*/
 	
 };// fim do programa
+
+
+
+
+
+
+
+
+/*
+	Name: insertionSort
+	Author: Beatriz Miranda da Silva 
+	Date: 14/05/25 11:36
+	Description: 
+*/
+
+#include <stdio.h>
+
+//sessao de prototipação
+
+void insertionSort(int *, int);//* para vetor, pois é a referencia(ponteiro) da estrutura que eu quero passar
+
+int main(){
+	
+	int i;
+	
+	int vet[] = { 35, 72, 17, 3, 28, 93, 54, 12, 21, 45};	// Vetor Randomico
+	//int vet[] = { 93, 72, 54, 45, 35, 28, 21, 17, 12, 3};	//Pior caso
+	//int vet[] = { 3, 12, 17, 21, 28, 35, 45, 54,72, 93};	//Melhor caso
+	
+	
+	int tam = sizeof(vet)/sizeof(int);	
+	
+		puts("vetor desordenado:");
+	for(i = 0; i < tam; i++){
+		printf("%d | ", vet[i]);
+	};
+	
+	insertionSort(vet, tam); //invoke da funçao pra ordenaçao
+	
+	puts("\n\nvetor ordenado com insertion sort:");
+	for(i = 0; i < tam; i++){
+		printf("%d | ", vet[i]);
+	};
+	
+	
+}//fim do main
+
+
+void insertionSort(int vet[], int tam){
+	int i, j, k, chave;
+	
+	for(i=0; i < tam; i++){
+		chave = vet[i];
+		j = i - 1;
+		
+		while(j >= 0 && vet[j] > chave){
+			vet[j + 1] = vet[j];
+			j = j - 1;
+		}
+		vet[j+1] = chave;
+	}
+}
