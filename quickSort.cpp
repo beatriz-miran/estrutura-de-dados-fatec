@@ -51,26 +51,29 @@ void quickSort(int vet[], int inicio, int fim){
 //funçao partition para particionar o vetor
 int partition(int vet[], int inicio, int fim){
 	
-	int pivot, aux; //esse pivot guarda o elemento
+	int esq, dir, pivot, aux; //esse pivot guarda o elemento
+	esq =  inicio;
+	dir = fim;
+	
 	pivot = vet[inicio];
-	while(inicio < fim){
-		while(vet[inicio] < pivot)
-			inicio++;
+	while(esq < dir){
+		while(vet[esq] <= pivot)
+			esq++;
 		
-		while(vet[fim] > pivot)
-			fim--;
+		while(vet[dir] > pivot)
+			dir--;
 		
 		
-		if(inicio < fim){
-			aux = vet[inicio];
-			vet[inicio] = vet[fim];
-			vet[fim] = aux;
+		if(esq < dir){
+			aux = vet[esq];
+			vet[esq] = vet[dir];
+			vet[dir] = aux;
 		}
 	}//fim do while que caminha nas duas direçoes
 	
-	vet[inicio] = vet[fim];
-	vet[fim] = pivot;
+	vet[inicio] = vet[dir];
+	vet[dir] = pivot;
 	
-	return fim;
+	return dir;
 	
 }//fim do partition
