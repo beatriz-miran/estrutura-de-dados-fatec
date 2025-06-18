@@ -1,129 +1,220 @@
 /******************************************************************************
     Name: trabalhoMetodosDeOrdenacao.cpp
     Author: Beatriz Miranda da Silva
-    Description: Sistema feito para mostrar a eficiencia de cada método de ordenação estudado nas aulas de Estrutura de Dados
-    Data: 28/05/2025 07:41
+    Description: Sistema para mostrar a eficiência dos métodos de ordenação
+    Data: 28/05/2025
 *******************************************************************************/
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
-//Sessão de prototipação
+// Prototipação
+void menu(int, int *, int);
+void selectionSort(int *, int, int *, int *);
+void bubbleSort(int *, int, int *, int *);
+void insertionSort(int *, int, int *, int *);
+void mergeSort(int *, int, int, int *, int *);
+void merge(int *, int, int, int, int *, int *);
+void quickSort(int *, int, int, int *, int *);
 
-void menu(int);
-void selectionSort(int *, int);
-void bubbleSort(int *, int);
-void insertionSort(int *, int);
-
-int opcao, aux, i, j, k, chave, menor, maior; 
-    
-
-int main()
-{
-    
-    printf("-- Menu de Métodos de Ordenação --\n\n");
-    printf("1 - Bubble Sort \n");
-    printf("2 - Selection Sort \n");
-    printf("3 - Insertion Sort \n");
-    printf("4 - Merge Sort \n");
-    printf("5 - Heap Sort \n");
-    printf("6 - Bogo Sort \n");
-    printf("7 - Quick Sort \n\n");
-    
-    
-    printf("Digite uma opçao ");
-    scanf("%d", &opcao);
-    
-    menu(opcao);
-    
-    //vetor randomico
-    
-    srand(time(NULL));  // Inicializa o gerador de números aleatórios
-
+int main() {
+    int opcao;
     int vet[100];
-    int tam = sizeof(vet)/sizeof(int);
-      
-    for (int i = 0; i < 100; i++) { // Preenche o vetor com valores aleatórios
-        vet[i] = rand(); // Gera um valor aleatório entre 0 e RAND_MAX
-      }
-    
-      for (int i = 0; i < 100; i++) {
-        printf("%d ", vet[i]);
-      }
-      printf("\n");
+    int tam = sizeof(vet) / sizeof(int);
+
+    // Gerador de números aleatórios
+    srand(time(NULL));
+    for (int i = 0; i < tam; i++) {
+        vet[i] = rand() % 1000; // Para facilitar leitura
+    }
+
+    printf("-- Menu de Metodos de Ordenacao --\n\n");
+    printf("1 - Bubble Sort\n");
+    printf("2 - Selection Sort\n");
+    printf("3 - Insertion Sort\n");
+    printf("4 - Merge Sort\n");
+    printf("5 - Quick Sort\n\n");
+
+    printf("Digite uma opcao: ");
+    scanf("%d", &opcao);
+
+    // Executa o método de ordenação escolhido
+    menu(opcao, vet, tam);
 
     return 0;
 }
 
-//menu
-void menu(int opcao){
-    switch(opcao){
+void menu(int opcao, int vet[], int tam) {
+    int comparacoes = 0, trocas = 0;
+    clock_t inicio, fim;
+    double tempo;
+
+    // Cria cópia do vetor original para preservar os dados
+    int copia[100];
+    for (int i = 0; i < tam; i++) {
+        copia[i] = vet[i];
+    }
+
+    printf("\nVetor original:\n");
+    for (int i = 0; i < tam; i++) {
+        printf("%d ", copia[i]);
+    }
+
+    printf("\n\nExecutando metodo...\n");
+    inicio = clock();
+
+    switch (opcao) {
         case 1:
-        printf("eae");
-        break;
-        
+            bubbleSort(copia, tam, &comparacoes, &trocas);
+            break;
         case 2:
-        printf("e nois");
-        break;
+            selectionSort(copia, tam, &comparacoes, &trocas);
+            break;
+        case 3:
+            insertionSort(copia, tam, &comparacoes, &trocas);
+            break;
+        case 4:
+            mergeSort(copia, 0, tam - 1, &comparacoes, &trocas);
+            break;
+        case 5:
+            quickSort(copia, 0, tam - 1, &comparacoes, &trocas);
+            break;
+        default:
+            printf("Opção invalida.\n");
+            return;
+    }
+
+    fim = clock();
+    tempo = (double)(fim - inicio) / CLOCKS_PER_SEC;
+
+    printf("\n\nVetor ordenado:\n");
+    for (int i = 0; i < tam; i++) {
+        printf("%d ", copia[i]);
+    }
+
+    printf("\n\nTotal de comparacoes: %d", comparacoes);
+    printf("\nTotal de trocas: %d", trocas);
+    printf("\nTempo de execucao: %.6f segundos\n", tempo);
+}
+
+// Bubble Sort
+void bubbleSort(int vet[], int tam, int *comp, int *troca) {
+    int aux;
+    for (int i = 0; i < tam - 1; i++) {
+        for (int j = 0; j < tam - 1 - i; j++) {
+            (*comp)++;
+            if (vet[j] > vet[j + 1]) {
+                aux = vet[j];
+                vet[j] = vet[j + 1];
+                vet[j + 1] = aux;
+                (*troca)++;
+            }
+        }
     }
 }
-//fim do menu
 
-/*//selection Sort
-void selectionSort(){
-    
-    while(i < tam){
-		menor = i;
-		j = i+1;
-		do{
-			if(vet[j] < vet[menor]){
-				menor = j;
-				j++;
-			}
-		}while(j < tam);
-		
-		if(i != menor){
-		aux = vet[i];
-		vet[i] = vet[menor];
-		vet[menor] = aux;
-	}
-	i++;
-	}
+// Selection Sort
+void selectionSort(int vet[], int tam, int *comp, int *troca) {
+    int menor, aux;
+    for (int i = 0; i < tam - 1; i++) {
+        menor = i;
+        for (int j = i + 1; j < tam; j++) {
+            (*comp)++;
+            if (vet[j] < vet[menor]) {
+                menor = j;
+            }
+        }
+        if (menor != i) {
+            aux = vet[i];
+            vet[i] = vet[menor];
+            vet[menor] = aux;
+            (*troca)++;
+        }
+    }
 }
-//fim selection Sort*/
 
-//bubble sort
-void bubbleSort(int vet[], int tam){
-    
-    int troca, comp;
-    
-    while(tam > 0){
-		for(i = 0; i < tam-1; i++){
-			if(vet[i] > vet[i+1]){
-				aux = vet[i+1];	// Variavel auxiliar
-				vet[i+1] = vet[i];
-				vet[i] = aux;
-				troca++;
-			};
-			comp++;
-		};
-		tam--;
-	};
+// Insertion Sort
+void insertionSort(int vet[], int tam, int *comp, int *troca) {
+    int chave, j;
+    for (int i = 1; i < tam; i++) {
+        chave = vet[i];
+        j = i - 1;
+        (*comp)++;
+        while (j >= 0 && vet[j] > chave) {
+            vet[j + 1] = vet[j];
+            j--;
+            (*troca)++;
+        }
+        vet[j + 1] = chave;
+    }
 }
-//fim do bubble sort
 
-/*/insertion sort
-void insertionSort(int vet[], int tam){
-
-	
-	for(i=0; i < tam; i++){
-		chave = vet[i];
-		j = i - 1;
-		
-		while(j >= 0 && vet[j] > chave){
-			vet[j + 1] = vet[j];
-			j = j - 1;
-		}
-		vet[j+1] = chave;
-	}
+// Merge Sort
+void mergeSort(int vet[], int esq, int dir, int *comp, int *troca) {
+    if (esq < dir) {
+        int meio = (esq + dir) / 2;
+        mergeSort(vet, esq, meio, comp, troca);
+        mergeSort(vet, meio + 1, dir, comp, troca);
+        merge(vet, esq, meio, dir, comp, troca);
+    }
 }
-/*///fim do insertion sort
+
+void merge(int vet[], int esq, int meio, int dir, int *comp, int *troca) {
+    int n1 = meio - esq + 1;
+    int n2 = dir - meio;
+
+    int L[n1], R[n2];
+
+    for (int i = 0; i < n1; i++) L[i] = vet[esq + i];
+    for (int j = 0; j < n2; j++) R[j] = vet[meio + 1 + j];
+
+    int i = 0, j = 0, k = esq;
+
+    while (i < n1 && j < n2) {
+        (*comp)++;
+        if (L[i] <= R[j]) {
+            vet[k++] = L[i++];
+        } else {
+            vet[k++] = R[j++];
+            (*troca)++;
+        }
+    }
+
+    while (i < n1) vet[k++] = L[i++];
+    while (j < n2) vet[k++] = R[j++];
+}
+
+// Quick Sort
+void quickSort(int vet[], int inicio, int fim, int *comp, int *troca) {
+    if (inicio < fim) {
+        int pivo = vet[inicio];
+        int i = inicio + 1;
+        int j = fim;
+        int aux;
+
+        while (i <= j) {
+            while (i <= fim && vet[i] <= pivo) {
+                i++;
+                (*comp)++;
+            }
+            while (j >= inicio && vet[j] > pivo) {
+                j--;
+                (*comp)++;
+            }
+            if (i < j) {
+                aux = vet[i];
+                vet[i] = vet[j];
+                vet[j] = aux;
+                (*troca)++;
+            }
+        }
+
+        vet[inicio] = vet[j];
+        vet[j] = pivo;
+        (*troca)++;
+
+        quickSort(vet, inicio, j - 1, comp, troca);
+        quickSort(vet, j + 1, fim, comp, troca);
+    }
+}
